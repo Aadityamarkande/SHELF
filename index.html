@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVerse - Book Price Comparison & Literary Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Professional design with seamless sidebar and background */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background: #e3b7b7;
+            /* Matches sidebar color */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background: #e3b7b7;
+            /* Light maroon color */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            margin-top: 60px;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+
+        .sidebar ul li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .sidebar ul li a:hover {
+            background: linear-gradient(to right, #202A44, #ffcccc);
+            /* Gradient effect on hover */
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: #202A44;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        nav .nav-links a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: #ffcccc;
+        }
+
+        nav .auth-buttons a {
+            color: #fff;
+            background: #202A44;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav .auth-buttons a:hover {
+            background: #660033;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(to bottom, #202A44, #ffcccc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .search-bar {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 25px;
+            border: none;
+            width: 300px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .search-bar::placeholder {
+            color: #aaa;
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #202A44;
+            font-size: 18px;
+        }
+
+        /* Compare Price, Live Event, Author Profile - Hero Section */
+        .hero-cards {
+            display: flex;
+            justify-content: space-evenly;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .hero-card {
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            width: 30%;
+            /* Smaller width */
+            transition: transform 0.2s;
+        }
+
+        .hero-card:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-card img {
+            width: 50%;
+            /* Smaller image */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+
+        .hero-card h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .hero-card button {
+            background: #ff4500;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background 0.3s ease;
+            border: none;
+        }
+
+        .hero-card button:hover {
+            background: #ff6347;
+        }
+
+        /* Recommended Books Section */
+        .recommended-books {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            margin-top: 30px;
+            padding-bottom: 10px;
+        }
+
+        .recommended-books .book-card {
+            background: #202A44;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .recommended-books .book-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .recommended-books .book-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .recommended-books .book-card h3 {
+            color: #fff;
+            margin-top: 15px;
+            font-size: 20px;
+        }
+
+        /* Genre Section */
+        .genres {
+            margin-top: 50px;
+        }
+
+        .genres h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .genres .genre-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .genres .genre-item {
+            background: #660033;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .genres .genre-item:hover {
+            transform: scale(1.1);
+            background: #202A44;
+        }
+
+        /* Sliding button for more recommendations */
+        .sc-133848s-1 {
+            display: inline-block;
+            background-color: #202A44;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .sc-133848s-1:hover {
+            background-color: #660033;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="bg-white rounded-full h-10 w-10 flex items-center justify-center">
+                <i class="fas fa-book text-orange-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold">SHELF</h2>
+        </div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Compare Books</a></li>
+            <li><a href="#">Genres</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Authors</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav>
+            <div class="flex justify-between items-center">
+                <div class="logo">BookVerse</div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Compare Books</a>
+                    <a href="#">Events</a>
+                    <a href="#">Genres</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="login.html">Login</a> <!-- Login link added -->
+                    <a href="signup.html">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-text">
+                <h1>SHELF</h1>
+                <p>Your one-stop platform to compare book prices, discover live events, and explore author profiles.</p>
+                <input type="text" class="search-bar" placeholder="Search for books, authors, or genres...">
+            </div>
+
+            <!-- Compare Price, Live Event, Author Profile - Below Search Bar -->
+            <div class="hero-cards">
+                <div class="hero-card">
+                    <img src="https://via.placeholder.com/150" alt="Compare Price">
+                    <h3>Compare Price</h3>
+                    <p>Find the best deals on books from multiple platforms.</p>
+                    <button>Learn More</button>
+                </div>
+                <div class="hero-card">
+                    <img src="https://via.placeholder.com/150" alt="Live Event">
+                    <h3>Live Event</h3>
+                    <p>Join live book events and interact with authors.</p>
+                    <button>Learn More</button>
+                </div>
+                <div class="hero-card">
+                    <img src="https://via.placeholder.com/150" alt="Author Profile">
+                    <h3>Author Profile</h3>
+                    <p>Explore the profiles of your favorite authors.</p>
+                    <button>Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Books Section -->
+        <section class="recommended-books">
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/10272785-L.jpg" alt="Mystery at the Manor">
+                <h3>Mystery at the Manor</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/10721712-L.jpg" alt="Fourth Wing">
+                <h3>Fourth Wing</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/7992757-L.jpg" alt="Harry Potter">
+                <h3>Harry Potter</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/6198185-L.jpg" alt="The Hobbit">
+                <h3>The Hobbit</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/10272785-L.jpg" alt="Pride and Prejudice">
+                <h3>Pride and Prejudice</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/10721712-L.jpg" alt="The Catcher in the Rye">
+                <h3>The Catcher in the Rye</h3>
+            </div>
+            <div class="book-card">
+                <img src="https://covers.openlibrary.org/b/id/7992757-L.jpg" alt="To Kill a Mockingbird">
+                <h3>To Kill a Mockingbird</h3>
+            </div>
+            <div class="sc-133848s-1">
+                <div class="sc-lnhrs7-6">
+                    <div class="sc-lnhrs7-9 gFQbeq"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 21 35">
+                            <g fill="#FFFFFF" fill-rule="evenodd">
+                                <path
+                                    d="M1.276 31.647a1.543 1.543 0 01.033-2.17l14.59-14.09a1.531 1.531 0 012.171.043c.59.61.566 1.592-.033 2.17L3.447 31.69a1.531 1.531 0 01-2.17-.043z">
+                                </path>
+                                <path
+                                    d="M1.276 1.43A1.543 1.543 0 001.31 3.6L15.9 17.69a1.531 1.531 0 002.171-.043 1.543 1.543 0 00-.033-2.17L3.447 1.387a1.531 1.531 0 00-2.17.043z">
+                                </path>
+                            </g>
+                        </svg></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Genre Section -->
+        <section class="genres">
+            <h2>Popular Genres</h2>
+            <div class="genre-list">
+                <div class="genre-item">Fiction</div>
+                <div class="genre-item">Non-fiction</div>
+                <div class="genre-item">Fantasy</div>
+                <div class="genre-item">Biography</div>
+                <div class="genre-item">Science Fiction</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Dark mode toggle functionality
+        document.getElementById('darkModeToggle').addEventListener('click', function () {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            if (isDarkMode) {
+                document.body.style.background = '#1E1E1E'; // Dark background
+                document.body.style.color = '#fff'; // Light text
+            } else {
+                document.body.style.background = '#e3b7b7'; // Light background
+                document.body.style.color = '#000'; // Dark text
+            }
+        });
+    </script>
+
+</body>
+
+</html>
